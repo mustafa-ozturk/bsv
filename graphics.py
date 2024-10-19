@@ -31,11 +31,15 @@ class Window():
 
     def draw_rectangles(self, list):
         recs = []
-        curr_x = 10
+        x0 = 0
+        # spacing should be relative to screen width
+        spacing = 10
+        width = 10
         for num in list:
             # height should be based on list number
-            recs.append(Rectangle(curr_x, self.__height, 20, num * 50))
-            curr_x += 30
+            # width of rectangle is based on screen width
+            recs.append(Rectangle(x0, self.__height, width, num * 5))
+            x0 += width + spacing
 
         for rec in recs:
             self.draw_rectangle(rec, "white")
@@ -51,7 +55,6 @@ class Rectangle():
         self.__y1 = y - height
 
     def draw(self, canvas, fill_color):
-        print("y0:", self.__y0, "y1:", self.__y1)
         canvas.create_rectangle(
             self.__x0, self.__y0, self.__x1, self.__y1, fill=fill_color
         )

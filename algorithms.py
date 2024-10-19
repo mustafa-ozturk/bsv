@@ -1,4 +1,9 @@
 import time
+
+# usleep(100) sleeps for 100 microsecons
+# 100 seems to be the limit
+usleep = lambda x: time.sleep(x/1000000.0)
+
 """
 repeat until sorted:
     if i > i + 1
@@ -7,12 +12,11 @@ repeat until sorted:
 def bubble_sort(list, window):
     sorted = list
     window.draw_rectangles(list)
-    time.sleep(1)
     while True:
         is_sorted = True
         for i in range(1, len(sorted)):
             window.redraw()
-            time.sleep(0.003)
+            usleep(100)
             window.clear()
             window.draw_rectangles(sorted)
             # window.highlight_pointer(i, "blue")

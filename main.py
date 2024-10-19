@@ -1,12 +1,29 @@
 from graphics import Window, Rectangle
 from algorithms import bubble_sort
+import random
 
 def main():
-    WIDTH = 800
-    HEIGHT = 800
+    WIDTH = 1280
+    HEIGHT = 720
     window = Window(WIDTH, HEIGHT)
     # self.__canvas.create_rectangle(10, self.__height, 20, 100, fill="white")
-    list = [10, 9, 12, 8,7, 7, 6, 15, 15, 5, 3, 2, 7, 6, 6, 5, 5, 4, 13, 3, 2, 1]
+
+
+    width = 10
+    spacing = 10
+    max_len = WIDTH //(width + spacing);
+
+    list = []
+    """
+    for i in range(max_len):
+        list.append(random.randrange(1, 15))
+    """
+
+    for i in range(max_len, 0, -1):
+       list.append(i)
+    random.shuffle(list)
+
+
     bubble_sort(list, window)
     window.wait_for_close()
     pass
