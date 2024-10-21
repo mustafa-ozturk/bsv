@@ -3,8 +3,8 @@ from algorithms import bubble_sort
 import random
 
 def main():
-    WIDTH = 1280
-    HEIGHT = 720
+    WIDTH = 500
+    HEIGHT = 500
     window = Window(WIDTH, HEIGHT)
     # self.__canvas.create_rectangle(10, self.__height, 20, 100, fill="white")
 
@@ -12,7 +12,6 @@ def main():
     for i in range(max_len):
         list.append(random.randrange(1, 15))
     """
-
 
     # 1. create a reverse sorted list
     #   - shuffle the list to randomize
@@ -25,7 +24,7 @@ def main():
     max_len = WIDTH //(width + spacing);
 
     for i in range(max_len, 0, -1):
-        random_list.append(i)
+        random_list.append((i, "white"))
     random.shuffle(random_list)
 
     bubble_sort(random_list, window)

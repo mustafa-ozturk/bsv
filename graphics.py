@@ -37,8 +37,9 @@ class Window():
         recs = []
 
         x0 = 0
-        for num in list:
-            recs.append(Rectangle(x0 + spacing, self.__height, width, num * (self.__height // max_len), "white", num));
+        for num, color in list:
+            print(num, color)
+            recs.append(Rectangle(x0 + spacing, self.__height, width, num * (self.__height // max_len), color, num));
             x0 += width + spacing
 
 
