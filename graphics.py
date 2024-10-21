@@ -16,6 +16,9 @@ class Window():
         self.__root.update_idletasks()
         self.__root.update()
 
+    def get_canvas(self):
+        return self.__canvas
+
     def wait_for_close(self):
         self.__running = True
         while self.__running is True:
@@ -25,36 +28,36 @@ class Window():
     def close(self):
         self.__running = False
 
-    def draw_rectangle(self, rectangle, fill_color):
-        rectangle.draw(self.__canvas, fill_color)
-        # self.__canvas.create_rectangle(10, self.__height, 20, 100, fill="white")
-
     def draw_rectangles(self, list):
-        recs = []
-        x0 = 0
-        # spacing should be relative to screen width
-        spacing = 10
+        self.__canvas.delete("all")
         width = 10
+        spacing = 10
+        max_len = self.__width //(width + spacing);
+
+        recs = []
+
+        x0 = 0
         for num in list:
-            # height should be based on list number
-            # width of rectangle is based on screen width
-            recs.append(Rectangle(x0, self.__height, width, num * 5))
+            recs.append(Rectangle(x0 + spacing, self.__height, width, num * (self.__height // max_len), "white", num));
             x0 += width + spacing
 
-        for rec in recs:
-            self.draw_rectangle(rec, "white")
 
-    def clear(self):
-        self.__canvas.delete("all")
+        for rec in recs:
+            rec.draw(self.__canvas)
 
 class Rectangle():
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, color, value):
         self.__x0 = x
         self.__y0 = y
         self.__x1 = x + width
         self.__y1 = y - height
+        self.__color = color
+        self.value = value
 
-    def draw(self, canvas, fill_color):
+    def __repr__(self):
+        return f"{self.__x0}, {self.__y1}, {self.value}"
+
+    def draw(self, canvas):
         canvas.create_rectangle(
-            self.__x0, self.__y0, self.__x1, self.__y1, fill=fill_color
+            self.__x0, self.__y0, self.__x1, self.__y1, fill=self.__color
         )

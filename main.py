@@ -8,24 +8,29 @@ def main():
     window = Window(WIDTH, HEIGHT)
     # self.__canvas.create_rectangle(10, self.__height, 20, 100, fill="white")
 
-
-    width = 10
-    spacing = 10
-    max_len = WIDTH //(width + spacing);
-
-    list = []
     """
     for i in range(max_len):
         list.append(random.randrange(1, 15))
     """
 
+
+    # 1. create a reverse sorted list
+    #   - shuffle the list to randomize
+    # 2. call bubble_sort(random_list)
+    #   - draw_rectangles
+
+    random_list = []
+    width = 10
+    spacing = 10
+    max_len = WIDTH //(width + spacing);
+
     for i in range(max_len, 0, -1):
-       list.append(i)
-    random.shuffle(list)
+        random_list.append(i)
+    random.shuffle(random_list)
 
+    bubble_sort(random_list, window)
 
-    bubble_sort(list, window)
     window.wait_for_close()
-    pass
+    return
 
 main()
