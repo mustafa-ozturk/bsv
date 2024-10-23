@@ -15,15 +15,14 @@ class Window():
         self.__height = height
 
         # Create the main button
-        self.button = Button(self.__root, text="next iteration", command=self.play_pause)
+        self.button = Button(self.__root, text="next iteration", command=self.test_pp1)
         self.button.place(x = 10, y = 10)
 
         self.pause = True
         self.list = []
 
         width = 10
-        spacing = 10
-        max_len = self.__width //(width + spacing);
+        max_len = self.__width // width;
 
         for i in range(max_len, 0, -1):
             self.list.append((i, "white"))
@@ -31,6 +30,71 @@ class Window():
 
         self.is_sorted = False
 
+        self.recwidth = 10
+        # spacing = 10
+        max_len = self.__width // self.recwidth;
+
+        self.recs = []
+
+        x0 = 0
+        for num, color in self.list:
+            print(num, color)
+            self.recs.append(Rectangle(x0, self.__height, self.recwidth, self.__height, color, num, max_len));
+            x0 += self.recwidth
+        # draw every rectangle white
+        for i in range(0, len(self.recs)):
+            self.draw_rectangle(i, "white")
+
+    def test_pp(self):
+        if self.pause == False:
+            self.pause = True
+        else:
+            self.pause = False
+
+        # draw every rectangle white
+        for i in range(0, len(self.list)):
+            self.draw_rectangle(i, "white")
+
+        # draw last recantle white and current one white
+        for i in range(0, len(self.list)):
+            time.sleep(0.5)
+            if i > 0:
+                self.draw_rectangle(i - 1, "white")
+            self.draw_rectangle(i, "red")
+            self.redraw()
+
+    # testing pp logic with bubble sort
+    # highlight i - 1 and i as read, and i - 2 as white if it exists
+    def test_pp1(self):
+        if self.pause == False:
+            self.pause = True
+        else:
+            self.pause = False
+
+        str = "current values: "
+        for rec in self.recs:
+            str += f"{rec.value}" + ' ,'
+
+        print('>>>>', str)
+
+
+        # draw last recantle white and current one white
+        for i in range(1, len(self.recs)):
+            time.sleep(0.001)
+            if i > 1:
+                self.draw_rectangle(i - 2, "white")
+            self.draw_rectangle(i - 1, "red")
+            self.draw_rectangle(i, "red")
+            self.redraw()
+            # bubble sort
+            if self.recs[i - 1].value > self.recs[i].value:
+                # swapping rectangles
+                self.recs[i - 1], self.recs[i] = self.recs[i], self.recs[i - 1],
+                time.sleep(0.01)
+                self.draw_rectangles()
+
+    def draw_rectangle(self, index, color):
+        self.recs[index].draw(self.get_canvas(), color=color);
 
     def play_pause(self):
         if self.pause == False:
@@ -38,18 +102,26 @@ class Window():
         else:
             self.pause = False
 
+        self.draw_rectangles()
         is_sorted = True
         for i in range(1, len(self.list)):
             self.redraw()
             time.sleep(0.001)
-            self.draw_rectangles()
             if self.list[i - 1][0] > self.list[i][0]:
                 temp = self.list[i]
                 self.list[i] = (self.list[i - 1][0], "white")
                 self.list[i - 1] = (temp[0], "white")
+
+                time.sleep(0.5)
+                # TODO: should modify rectangles directly
+                temprec = self.recs[i]
+                self.recs[i] = self.recs[i - 1]
+                self.recs[i - 1] = temprec
+
+                self.draw_rectangle(i - 1, "red")
+                self.draw_rectangle(i, "red")
                 self.redraw()
-                time.sleep(0.001)
-                self.draw_rectangles()
+                # self.draw_rectangles()
                 is_sorted = False
 
         if is_sorted:
@@ -58,25 +130,6 @@ class Window():
                 self.list[i] = (self.list[i][0], "green")
                 time.sleep(0.001)
                 self.draw_rectangles()
-
-            """
-            for i in range(1, len(self.list)):
-                self.redraw()
-                time.sleep(0.001)
-                self.draw_rectangles(list)
-                if self.list[i - 1][0] > self.list[i][0]:
-                    self.list[i - 1] = (self.list[i - 1][0], "red")
-                    self.list[i] = (self.list[i][0], "red")
-                    self.redraw()
-                    time.sleep(0.001)
-                    self.draw_rectangles(sorted)
-                    temp = self.list[i]
-                    self.list[i] = (self.list[i - 1][0], "white")
-                    self.list[i - 1] = (temp[0], "white")
-                    is_sorted = False
-                if is_sorted:
-                    break
-            """
 
 
 
@@ -99,39 +152,46 @@ class Window():
     def close(self):
         self.__running = False
 
+    # TODO: this should only run a for loop on a list of rectangles
+    # and call draw on each
     def draw_rectangles(self):
         self.__canvas.delete("all")
-        width = 10
-        spacing = 10
-        max_len = self.__width //(width + spacing);
-
-        recs = []
 
         x0 = 0
-        for num, color in self.list:
-            print(num, color)
-            recs.append(Rectangle(x0 + spacing, self.__height, width, num * (self.__height // max_len), color, num));
-            x0 += width + spacing
-
-
-        for rec in recs:
-            rec.draw(self.__canvas)
+        for rec in self.recs:
+            rec.draw(self.__canvas, x0)
+            x0 += self.recwidth
 
 
 
 class Rectangle():
-    def __init__(self, x, y, width, height, color, value):
-        self.__x0 = x
+    def __init__(self, x, y, width, screenheight, color, value, max_len):
+        self.height = value * (screenheight // max_len)
+        # rec start x (left of screen)
+        self.x0 = x
+        # rec start y (bottom of screen)
         self.__y0 = y
+        # rec end x
         self.__x1 = x + width
-        self.__y1 = y - height
+        # rec end y (TODO: should be calculate on draw)
+        self.__y1 = y - self.height
         self.__color = color
         self.value = value
+        self.max_len = max_len
+        self.height = self.height
 
     def __repr__(self):
-        return f"{self.__x0}, {self.__y1}, {self.value}"
+        return f"{self.x0}, {self.__y1}, {self.value}"
 
-    def draw(self, canvas):
+    def draw(self, canvas, startx=None, color=None):
+        if startx is None:
+            startx = self.x0
+        if color is None:
+            color = self.__color
+        # y1 should be calculated dynamically
+        self.__y1 = self.__y0 - self.height
+        endx = startx + 10;
+        self.x0 = startx
         canvas.create_rectangle(
-            self.__x0, self.__y0, self.__x1, self.__y1, fill=self.__color
+            startx, self.__y0, endx, self.__y1, fill=color
         )

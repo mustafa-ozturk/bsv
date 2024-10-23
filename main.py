@@ -20,8 +20,8 @@ def start_bubble_sort():
 """
 
 def main():
-    WIDTH = 500
-    HEIGHT = 500
+    WIDTH = 400
+    HEIGHT = 400
     window = Window(WIDTH, HEIGHT)
     window.wait_for_close()
     return
