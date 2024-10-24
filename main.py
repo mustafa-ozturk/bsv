@@ -24,6 +24,7 @@ def main():
     HEIGHT = 400
     window = Window(WIDTH, HEIGHT)
     window.wait_for_close()
+    bubble_sort()
     return
 
 main()

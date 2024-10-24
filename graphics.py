@@ -18,6 +18,9 @@ class Window():
         self.button = Button(self.__root, text="next iteration", command=self.test_pp1)
         self.button.place(x = 10, y = 10)
 
+        self.button = Button(self.__root, text="play/pause", command=self.play_pause)
+        self.button.place(x = 140, y = 10)
+
         self.pause = True
         self.list = []
 
@@ -44,6 +47,22 @@ class Window():
         # draw every rectangle white
         for i in range(0, len(self.recs)):
             self.draw_rectangle(i, "white")
+
+
+        self.ppf = False
+
+    def play_pause(self):
+        if self.ppf == False:
+            self.ppf = True
+        else:
+            self.ppf = False
+
+        while self.is_sorted == False:
+            if self.ppf == False:
+                break
+            self.test_pp1()
+
+
 
     def test_pp(self):
         if self.pause == False:
@@ -78,6 +97,7 @@ class Window():
         print('>>>>', str)
 
 
+        self.is_sorted = True
         # draw last recantle white and current one white
         for i in range(1, len(self.recs)):
             time.sleep(0.001)
@@ -92,11 +112,12 @@ class Window():
                 self.recs[i - 1], self.recs[i] = self.recs[i], self.recs[i - 1],
                 time.sleep(0.01)
                 self.draw_rectangles()
+                self.is_sorted = False
 
     def draw_rectangle(self, index, color):
         self.recs[index].draw(self.get_canvas(), color=color);
 
-    def play_pause(self):
+    def old_play_pause(self):
         if self.pause == False:
             self.pause = True
         else:
