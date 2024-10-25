@@ -1,6 +1,7 @@
 from tkinter import *
 import time
 import random
+import copy
 
 class Window():
     def __init__(self, width, height):
@@ -19,7 +20,10 @@ class Window():
         self.button.place(x = 10, y = 10)
 
         self.button = Button(self.__root, text="play/pause", command=self.play_pause)
-        self.button.place(x = 140, y = 10)
+        self.button.place(x = 130, y = 10)
+        
+        self.button = Button(self.__root, text="previous state", command=self.prev_iteration)
+        self.button.place(x = 230, y = 10)
 
         self.pause = True
         self.list = []
@@ -38,6 +42,7 @@ class Window():
         max_len = self.__width // self.recwidth;
 
         self.recs = []
+        self.stack = []
 
         x0 = 0
         for num, color in self.list:
@@ -50,6 +55,14 @@ class Window():
 
 
         self.ppf = False
+
+    def prev_iteration(self):
+        self.__canvas.delete("all")
+        test = self.stack.pop()
+        self.recs = test[:]
+        print("hello", self.recs)
+        self.draw_rectangles()
+        
 
     def play_pause(self):
         if self.ppf == False:
@@ -73,7 +86,6 @@ class Window():
         # draw every rectangle white
         for i in range(0, len(self.list)):
             self.draw_rectangle(i, "white")
-
         # draw last recantle white and current one white
         for i in range(0, len(self.list)):
             time.sleep(0.5)
@@ -85,16 +97,11 @@ class Window():
     # testing pp logic with bubble sort
     # highlight i - 1 and i as read, and i - 2 as white if it exists
     def test_pp1(self):
+        self.stack.append(copy.deepcopy(self.recs))
         if self.pause == False:
             self.pause = True
         else:
             self.pause = False
-
-        str = "current values: "
-        for rec in self.recs:
-            str += f"{rec.value}" + ' ,'
-
-        print('>>>>', str)
 
 
         self.is_sorted = True
@@ -113,6 +120,7 @@ class Window():
                 time.sleep(0.01)
                 self.draw_rectangles()
                 self.is_sorted = False
+
 
     def draw_rectangle(self, index, color):
         self.recs[index].draw(self.get_canvas(), color=color);
