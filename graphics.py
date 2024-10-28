@@ -14,153 +14,15 @@ class Window():
 
         self.__width = width
         self.__height = height
+    
+    def get_root(self):
+        return self__root
 
-        # Create the main button
-        self.button = Button(self.__root, text="next iteration", command=self.test_pp1)
-        self.button.place(x = 10, y = 10)
-
-        self.button = Button(self.__root, text="play/pause", command=self.play_pause)
-        self.button.place(x = 130, y = 10)
-        
-        self.button = Button(self.__root, text="previous state", command=self.prev_iteration)
-        self.button.place(x = 230, y = 10)
-
-        self.pause = True
-        self.list = []
-
-        width = 10
-        max_len = self.__width // width;
-
-        for i in range(max_len, 0, -1):
-            self.list.append((i, "white"))
-        random.shuffle(self.list)
-
-        self.is_sorted = False
-
-        self.recwidth = 10
-        # spacing = 10
-        max_len = self.__width // self.recwidth;
-
-        self.recs = []
-        self.stack = []
-
-        x0 = 0
-        for num, color in self.list:
-            print(num, color)
-            self.recs.append(Rectangle(x0, self.__height, self.recwidth, self.__height, color, num, max_len));
-            x0 += self.recwidth
-        # draw every rectangle white
-        for i in range(0, len(self.recs)):
-            self.draw_rectangle(i, "white")
-
-
-        self.ppf = False
-
-    def prev_iteration(self):
-        self.__canvas.delete("all")
-        test = self.stack.pop()
-        self.recs = test[:]
-        print("hello", self.recs)
-        self.draw_rectangles()
-        
-
-    def play_pause(self):
-        if self.ppf == False:
-            self.ppf = True
-        else:
-            self.ppf = False
-
-        while self.is_sorted == False:
-            if self.ppf == False:
-                break
-            self.test_pp1()
-
-
-
-    def test_pp(self):
-        if self.pause == False:
-            self.pause = True
-        else:
-            self.pause = False
-
-        # draw every rectangle white
-        for i in range(0, len(self.list)):
-            self.draw_rectangle(i, "white")
-        # draw last recantle white and current one white
-        for i in range(0, len(self.list)):
-            time.sleep(0.5)
-            if i > 0:
-                self.draw_rectangle(i - 1, "white")
-            self.draw_rectangle(i, "red")
-            self.redraw()
-
-    # testing pp logic with bubble sort
-    # highlight i - 1 and i as read, and i - 2 as white if it exists
-    def test_pp1(self):
-        self.stack.append(copy.deepcopy(self.recs))
-        if self.pause == False:
-            self.pause = True
-        else:
-            self.pause = False
-
-
-        self.is_sorted = True
-        # draw last recantle white and current one white
-        for i in range(1, len(self.recs)):
-            time.sleep(0.001)
-            if i > 1:
-                self.draw_rectangle(i - 2, "white")
-            self.draw_rectangle(i - 1, "red")
-            self.draw_rectangle(i, "red")
-            self.redraw()
-            # bubble sort
-            if self.recs[i - 1].value > self.recs[i].value:
-                # swapping rectangles
-                self.recs[i - 1], self.recs[i] = self.recs[i], self.recs[i - 1],
-                time.sleep(0.01)
-                self.draw_rectangles()
-                self.is_sorted = False
-
-
-    def draw_rectangle(self, index, color):
-        self.recs[index].draw(self.get_canvas(), color=color);
-
-    def old_play_pause(self):
-        if self.pause == False:
-            self.pause = True
-        else:
-            self.pause = False
-
-        self.draw_rectangles()
-        is_sorted = True
-        for i in range(1, len(self.list)):
-            self.redraw()
-            time.sleep(0.001)
-            if self.list[i - 1][0] > self.list[i][0]:
-                temp = self.list[i]
-                self.list[i] = (self.list[i - 1][0], "white")
-                self.list[i - 1] = (temp[0], "white")
-
-                time.sleep(0.5)
-                # TODO: should modify rectangles directly
-                temprec = self.recs[i]
-                self.recs[i] = self.recs[i - 1]
-                self.recs[i - 1] = temprec
-
-                self.draw_rectangle(i - 1, "red")
-                self.draw_rectangle(i, "red")
-                self.redraw()
-                # self.draw_rectangles()
-                is_sorted = False
-
-        if is_sorted:
-            for i in range(0, len(self.list)):
-                self.redraw()
-                self.list[i] = (self.list[i][0], "green")
-                time.sleep(0.001)
-                self.draw_rectangles()
-
-
+    def get_width(self):
+        return self.__width
+    
+    def get_height(self):
+        return self.__height
 
     def redraw(self):
         self.__root.update_idletasks()
@@ -181,8 +43,6 @@ class Window():
     def close(self):
         self.__running = False
 
-    # TODO: this should only run a for loop on a list of rectangles
-    # and call draw on each
     def draw_rectangles(self):
         self.__canvas.delete("all")
 
@@ -195,7 +55,8 @@ class Window():
 
 class Rectangle():
     def __init__(self, x, y, width, screenheight, color, value, max_len):
-        self.height = value * (screenheight // max_len)
+        topmargin = 10
+        self.height = value * ((screenheight - topmargin) // max_len) 
         # rec start x (left of screen)
         self.x0 = x
         # rec start y (bottom of screen)
