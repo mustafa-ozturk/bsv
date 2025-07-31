@@ -1,12 +1,5 @@
-# dsav - Data Structures and Algorithm Visualizer
+# BSV: Bubble Sort Visualizer
 
-todo:
-- [] bubble sort
-  - [x] build basic demo
-  - [x] rectangle width relative to screen width
-    - this kinda works but needs more work
-  - [] rectangle height relative to screen height
-  - [] rectangles being swapped should be red
+## Demo
 
-- [] merge sort
-- [] selection sort
+built with python and tkinter
